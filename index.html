@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Afinidade</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .question {
+            margin: 10px 0;
+        }
+        button {
+            background: #00676D;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        button:hover {
+            background: #009FA1;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Jogo de Afinidade</h1>
+    <form id="quizForm">
+        <div class="question">
+            <button type="button" onclick="calculateScore()">Enviar Respostas</button>
+        </div>
+    </form>
+    <div id="result" style="display:none;"></div>
+</div>
+
+<script>
+    const questions = [
+        { question: "Qual é a minha cor favorita?", correct: "branca", incorrect: ["rosa", "preta"] },
+        { question: "Qual é a minha série favorita?", correct: "the walking dead", incorrect: ["Arrow", "game of thrones"] },
+        { question: "Qual é o meu exercício favorito?", correct: "musculação", incorrect: ["natação", "box"] },
+        { question: "Qual é a minha posição sexual favorita?", correct: "Papa e mama", incorrect: ["Dog", "de lado"] },
+        { question: "Prefiro ambiente?", correct: "praia", incorrect: ["estrada", "avião"] },
+        { question: "Gosto mais de cão ou tigre?", correct: "cão", incorrect: ["gato", "tigre"] },
+        { question: "Onde sonho em viver?", correct: "London", incorrect: ["nova york", "tokyo"] },
+        { question: "Onde quero passar a lua de mel?", correct: "maldivas", incorrect: ["paris", "cancun"] },
+        { question: "Qual é o meu sonho profissional?", correct: "desenvolvedor", incorrect: ["PM", "engenheiro"] },
+        { question: "Qual é a minha sapatilha favorita?", correct: "nike", incorrect: ["adidas", "puma"] },
+        { question: "Prefiro camiseta ou interior?", correct: "camiseta", incorrect: ["interior", "manga longa"] },
+        { question: "Qual é o meu iPhone favorito?", correct: "iphone x", incorrect: ["iphone 12", "iphone 14"] },
+        { question: "Prefiro dor de cabeça ou dor de estômago?", correct: "dor de cabeça", incorrect: ["dor de estômago", "dor nas costas"] },
+        { question: "Qual é o meu filme favorito?", correct: "inception", incorrect: ["titanic", "avatar"] },
+        { question: "Qual é a minha fruta favorita?", correct: "manga", incorrect: ["banana", "maçã"] },
+        { question: "Qual é o meu esporte favorito?", correct: "futebol", incorrect: ["basquete", "tenis"] },
+        { question: "Qual é o meu lugar favorito para viajar?", correct: "canada", incorrect: ["england", "USA"] },
+        { question: "Qual é a minha estação do ano favorita?", correct: "primavera", incorrect: ["verão", "inverno"] }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const quizForm = document.getElementById('quizForm');
+
+        questions.forEach((item, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.classList.add('question');
+            const options = [item.correct, ...item.incorrect];
+            options.sort(() => Math.random() - 0.5); // Embaralhar as opções
+
+            const selectHTML = `<label for="q${index + 1}">${index + 1}. ${item.question}</label>
+                                <select id="q${index + 1}">
+                                    ${options.map(option => `<option value="${option}">${option}</option>`).join('')}
+                                </select>`;
+            questionDiv.innerHTML = selectHTML;
+            quizForm.insertBefore(questionDiv, quizForm.lastElementChild);
+        });
+    });
+
+    function calculateScore() {
+        let score = 0;
+        const form = document.getElementById('quizForm');
+        const inputs = form.getElementsByTagName('select');
+
+        for (let i = 0; i < questions.length; i++) {
+            if (inputs[i].value === questions[i].correct) {
+                score++;
+            }
+        }
+
+        const totalQuestions = questions.length;
+        const percentage = (score / totalQuestions) * 100;
+        let reward;
+
+        if (percentage < 20) {
+            reward = "Você ganhou um prego!";
+        } else if (percentage >= 20 && percentage < 50) {
+            reward = "Você ganhou chocolate!";
+        } else if (percentage >= 75 && percentage < 80) {
+            reward = "Você ganhou um hamburger!";
+        } else if (percentage >= 81 && percentage < 90) {
+            reward = "Você ganhou KFC!";
+        } else if (percentage >= 95 && percentage <= 100) {
+            reward = "Você ganhou pizza!";
+        }
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `<h2>Resultado: ${reward}</h2><p>Você acertou ${score} de ${totalQuestions} perguntas (${percentage.toFixed(2)}%).</p>`;
+
+        // Salvar resultado no localStorage
+        const results = JSON.parse(localStorage.getItem('results')) || [];
+        results.push({ score, totalQuestions, percentage });
+        localStorage.setItem('results', JSON.stringify(results));
+    }
+</script>
+
+</body>
+</html>
