@@ -114,15 +114,17 @@
         const percentage = (score / totalQuestions) * 100;
         let reward;
 
-        if (percentage < 20) {
-            reward = "Você ganhou um prego!";
-        } else if (percentage >= 20 && percentage < 50) {
-            reward = "Você ganhou chocolate!";
-        } else if (percentage >= 75 && percentage < 80) {
+        if (percentage <= 25) {
+            reward = "Me deves um prego!";
+        } else if (percentage > 25 && percentage <= 50) {
+            reward = "Me deves chocolate!";
+        } else if (percentage > 50 && percentage <= 70) {
+            reward = "Me deves petisco!";
+        } else if (percentage > 70 && percentage <= 80) {
             reward = "Você ganhou um hamburger!";
-        } else if (percentage >= 81 && percentage < 90) {
+        } else if (percentage > 80 && percentage <= 94) {
             reward = "Você ganhou KFC!";
-        } else if (percentage >= 95 && percentage <= 100) {
+        } else if (percentage > 94 && percentage <= 100) {
             reward = "Você ganhou pizza!";
         }
 
